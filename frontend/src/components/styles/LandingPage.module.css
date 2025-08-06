@@ -1,0 +1,393 @@
+/* Base Styles */
+.landing {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #ffffff;
+  background-color: #0a0a0a;
+  padding-top: 70px; /* Account for fixed navbar */
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px 5% 120px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to bottom, transparent, #0a0a0a);
+  z-index: 1;
+}
+
+.heroContent {
+  max-width: 500px;
+  z-index: 2;
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #ffffff, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.highlight {
+  color: #6366f1;
+}
+
+.tagline {
+  font-size: 1.5rem;
+  color: #d1d5db;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+.ctaContainer {
+  display: flex;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.ctaButton {
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ctaButton:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.secondaryButton {
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: transparent;
+  color: #a5b4fc;
+  border: 1px solid #4f46e5;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondaryButton:hover {
+  background: rgba(99, 102, 241, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Code Preview Section */
+.codePreview {
+  position: relative;
+  z-index: 2;
+  width: 50%;
+}
+
+.codeWindow {
+  background: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: perspective(1000px) rotateY(-10deg);
+  transition: transform 0.3s ease;
+  width: 100%;
+}
+
+.codeWindow:hover {
+  transform: perspective(1000px) rotateY(-5deg);
+}
+
+.windowHeader {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  background: #2d2d2d;
+}
+
+.windowButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.windowButtons span {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.red {
+  background: #ff5f56;
+}
+
+.yellow {
+  background: #ffbd2e;
+}
+
+.green {
+  background: #27c93f;
+}
+
+.windowTitle {
+  margin-left: 16px;
+  font-size: 0.8rem;
+  color: #a0a0a0;
+}
+
+.codeBlock {
+  margin: 0;
+  padding: 20px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #d4d4d4;
+  overflow-x: auto;
+  background: #1e1e1e;
+  text-align: left;
+  white-space: pre;
+  display: block;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Features Section */
+.featuresSection {
+  padding: 100px 5%;
+  background: #0a0a0a;
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 60px;
+  color: #ffffff;
+  position: relative;
+}
+
+.sectionTitle::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: #6366f1;
+  margin: 20px auto 0;
+  border-radius: 2px;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  background: #111111;
+  padding: 30px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border: 1px solid #1f1f1f;
+}
+
+.featureCard:hover {
+  transform: translateY(-5px);
+  background: #1a1a1a;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: #6366f1;
+}
+
+.featureIcon {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.featureCard h3 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: #e5e7eb;
+}
+
+.featureCard p {
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+/* Templates Section */
+.templatesSection {
+  padding: 80px 5%;
+  background: #111111;
+}
+
+.templatesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.templateCard {
+  background: #1a1a1a;
+  padding: 30px 20px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.templateCard:hover {
+  transform: translateY(-5px);
+  background: #222222;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.templateLogo {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.templateCard h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #e5e7eb;
+}
+
+.templateCard p {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+/* CTA Section */
+.ctaSection {
+  padding: 100px 5%;
+  text-align: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.ctaText {
+  max-width: 600px;
+  margin: 0 auto 40px;
+  font-size: 1.1rem;
+  color: #d1d5db;
+  line-height: 1.6;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 1024px) {
+  .hero {
+    flex-direction: column;
+    padding: 60px 5% 80px;
+    text-align: center;
+  }
+  
+  .heroContent {
+    max-width: 100%;
+    margin-bottom: 50px;
+  }
+  
+  .codePreview {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .codeWindow {
+    transform: none;
+  }
+  
+  .codeWindow:hover {
+    transform: none;
+  }
+  
+  .ctaContainer {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+  
+  .tagline {
+    font-size: 1.2rem;
+  }
+  
+  .sectionTitle {
+    font-size: 2rem;
+  }
+  
+  .codeWindow {
+    width: calc(100% - 40px);
+    margin: 0 auto;
+  }
+  
+  .codeBlock {
+    padding: 15px;
+    font-size: 0.8rem;
+  }
+  
+  .hero {
+    padding: 60px 20px;
+  }
+  
+  .codePreview {
+    margin-top: 40px;
+    padding: 0 20px;
+  }
+  
+  .featuresGrid,
+  .templatesGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ctaContainer {
+    flex-direction: column;
+  }
+  
+  .ctaButton,
+  .secondaryButton {
+    width: 100%;
+  }
+  
+  .secondaryButton {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2.5rem;
+  }
+  
+  .tagline {
+    font-size: 1.1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.8rem;
+  }
+  
+  .featureCard,
+  .templateCard {
+    padding: 20px 15px;
+  }
+}

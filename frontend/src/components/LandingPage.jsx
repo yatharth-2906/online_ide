@@ -1,6 +1,12 @@
 import styles from './styles/LandingPage.module.css';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router';
+import { AppContext } from '../AppContext';
 
 function LandingPage() {
+    const { user, logout } = useContext(AppContext);
+    const navigate = useNavigate();
+    
     return (
         <div className={styles.landing}>
             <div className={styles.hero}>
@@ -11,7 +17,15 @@ function LandingPage() {
                     <p className={styles.tagline}>Your complete development environment in the cloud</p>
                     <div className={styles.ctaContainer}>
                         <button className={styles.ctaButton}>Start Coding Now</button>
-                        <button className={styles.secondaryButton}>Explore Templates</button>
+                        {user ? (
+                            <button className={styles.secondaryButton} onClick={logout} >
+                                Logout
+                            </button>
+                        ) : (
+                            <button className={styles.secondaryButton} onClick={() => navigate("/login")}>
+                                Login
+                            </button>
+                        )}
                     </div>
                 </div>
                 <div className={styles.codePreview}>

@@ -1,3 +1,7 @@
+*.txt
+.env
+node_modules/
+
 # Logs
 logs
 *.log

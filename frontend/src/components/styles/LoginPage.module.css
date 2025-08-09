@@ -1,0 +1,154 @@
+.loginContainer {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #0a0a0a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.loginCard {
+    background: #111111;
+    border-radius: 12px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid #1f1f1f;
+}
+
+.loginHeader {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.loginTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, #ffffff, #a5b4fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.loginSubtitle {
+    color: #d1d5db;
+    font-size: 1rem;
+}
+
+.loginForm {
+    margin-top: 30px;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.formLabel {
+    display: block;
+    color: #e5e7eb;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.formInput {
+    width: 100%;
+    padding: 12px 16px;
+    background: #1e1e1e;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease;
+}
+
+.formInput:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+
+.formOptions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    font-size: 0.9rem;
+}
+
+.rememberMe {
+    display: flex;
+    align-items: center;
+    color: #d1d5db;
+    cursor: pointer;
+}
+
+.checkbox {
+    margin-right: 8px;
+    accent-color: #6366f1;
+}
+
+.forgotPassword {
+    color: #a5b4fc;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.forgotPassword:hover {
+    color: #6366f1;
+}
+
+.loginButton {
+    width: 100%;
+    padding: 14px;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 20px;
+}
+
+.loginButton:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.loginFooter {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    margin-top: 20px;
+}
+
+.signupLink {
+    color: #a5b4fc;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.signupLink:hover {
+    color: #6366f1;
+}
+
+@media (max-width: 480px) {
+    .loginCard {
+        padding: 30px 20px;
+    }
+    
+    .loginTitle {
+        font-size: 1.8rem;
+    }
+    
+    .loginSubtitle {
+        font-size: 0.95rem;
+    }
+}

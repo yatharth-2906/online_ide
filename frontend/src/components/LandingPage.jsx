@@ -6,6 +6,13 @@ import { AppContext } from '../AppContext';
 function LandingPage() {
     const { user, logout } = useContext(AppContext);
     const navigate = useNavigate();
+
+    const handleCreateProject = async () => {
+        if(!user)
+            return navigate("/login");
+
+        console.info("Creating new project...");
+    }
     
     return (
         <div className={styles.landing}>
@@ -16,7 +23,7 @@ function LandingPage() {
                     </h1>
                     <p className={styles.tagline}>Your complete development environment in the cloud</p>
                     <div className={styles.ctaContainer}>
-                        <button className={styles.ctaButton}>Start Coding Now</button>
+                        <button className={styles.ctaButton} onClick={handleCreateProject}>Start Coding Now</button>
                         {user ? (
                             <button className={styles.secondaryButton} onClick={logout} >
                                 Logout
@@ -115,12 +122,6 @@ export default App;`}
                         <p>Express API Starter</p>
                     </div>
                 </div>
-            </div>
-
-            <div className={styles.ctaSection}>
-                <h2 className={styles.sectionTitle}>Ready to Code in the Cloud?</h2>
-                <p className={styles.ctaText}>Join thousands of developers building projects directly in their browsers</p>
-                <button className={styles.ctaButton}>Get Started for Free</button>
             </div>
         </div>
     );

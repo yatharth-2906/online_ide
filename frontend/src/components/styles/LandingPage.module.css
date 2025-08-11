@@ -276,21 +276,6 @@
   font-size: 0.9rem;
 }
 
-/* CTA Section */
-.ctaSection {
-  padding: 100px 5%;
-  text-align: center;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-}
-
-.ctaText {
-  max-width: 600px;
-  margin: 0 auto 40px;
-  font-size: 1.1rem;
-  color: #d1d5db;
-  line-height: 1.6;
-}
-
 /* Mobile Responsiveness */
 @media (max-width: 1024px) {
   .hero {

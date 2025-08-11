@@ -5,13 +5,10 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 
 // Routers Import and DB Connection
-const { connectToDatabase } = require('./connect');
 const homeRouter = require('./ROUTES/home');
-const authRouter = require('./ROUTES/auth');
-const projectRouter = require('./ROUTES/project');
 
 const app = express();
-const port = Number(process.env.PORT) || 3000;
+const port = Number(process.env.PORT); // Port from environment variables of the container
 
 // CORS options
 const corsOptions = {
@@ -31,11 +28,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routers
 app.use('/', homeRouter);
-app.use('/auth', authRouter);
-app.use('/project', projectRouter);
 
 // Starting the server and DB Connection 
-connectToDatabase();
 app.listen(port, (req, res) => {
   console.log(`Server is running on PORT:${port}`);
 });

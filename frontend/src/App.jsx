@@ -1,9 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
 import './App.css';
 import { useContext } from 'react';
 import { AppContext  } from './AppContext';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import ProjectPage from './pages/ProjectPage';
 
 function App() {
   const { loading } = useContext(AppContext);
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/project" element={<ProjectPage />} />
         </Routes>
       </Router>
   );

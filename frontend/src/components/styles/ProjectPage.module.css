@@ -1,0 +1,266 @@
+/* Base Container Styles */
+.projectContainer {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #ffffff;
+  background-color: #0a0a0a;
+  display: flex;
+  height: calc(100vh - 70px);
+  overflow: hidden;
+}
+
+/* File Explorer Styles */
+.fileExplorer {
+  width: 250px;
+  background-color: #111111;
+  border-right: 1px solid #1f1f1f;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.explorerHeader {
+  padding: 15px 20px;
+  border-bottom: 1px solid #1f1f1f;
+  background-color: #1a1a1a;
+}
+
+.explorerHeader h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #a5b4fc;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.fileTree {
+  padding: 10px 0;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.fileList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file, .folder {
+  padding: 8px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.file:hover, .folder:hover {
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+.activeFile {
+  background-color: rgba(99, 102, 241, 0.2) !important;
+  border-left: 2px solid #6366f1;
+}
+
+.fileIcon, .folderIcon {
+  margin-right: 8px;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.folderContents {
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Main Content Area */
+.mainContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Editor Section */
+.editorContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #1f1f1f;
+}
+
+.editorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 15px;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #1f1f1f;
+}
+
+.tabBar {
+  display: flex;
+}
+
+.activeTab {
+  padding: 8px 15px;
+  background-color: #1e1e1e;
+  border-radius: 4px 4px 0 0;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.runButton {
+  padding: 6px 12px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.runButton:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.codeEditor {
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.codeEditor textarea {
+  width: 100%;
+  height: 100%;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  border: none;
+  resize: none;
+  padding: 15px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  outline: none;
+  tab-size: 2;
+}
+
+/* Terminal Section */
+.terminalContainer {
+  height: 200px;
+  background-color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminalHeader {
+  padding: 8px 15px;
+  border-bottom: 1px solid #1f1f1f;
+  display: flex;
+  align-items: center;
+}
+
+.terminalHeader h4 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #a5b4fc;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.terminalContent {
+  flex-grow: 1;
+  padding: 10px 15px;
+  overflow-y: auto;
+  background-color: #0a0a0a;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+.terminalLine {
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.terminalLine:last-child {
+  margin-bottom: 0;
+}
+
+.terminalInput {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  background-color: #111111;
+  border-top: 1px solid #1f1f1f;
+}
+
+.terminalInput span {
+  margin-right: 8px;
+  color: #6366f1;
+  font-family: 'Fira Code', monospace;
+}
+
+.terminalInput input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  color: #e5e7eb;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4f46e5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .projectContainer {
+    flex-direction: column;
+  }
+  
+  .fileExplorer {
+    width: 100%;
+    height: 200px;
+    border-right: none;
+    border-bottom: 1px solid #1f1f1f;
+  }
+  
+  .mainContent {
+    height: calc(100vh - 270px);
+  }
+
+  .terminalContainer {
+    height: 150px;
+  }
+}
+
+/* Animation for folder toggle */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.folderContents {
+  animation: slideDown 0.2s ease-out;
+}

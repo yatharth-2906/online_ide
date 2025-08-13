@@ -36,7 +36,7 @@ function Navbar() {
           <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
           <li><Link to="/features" onClick={() => setIsMenuOpen(false)}>Features</Link></li>
           <li><Link to="/templates" onClick={() => setIsMenuOpen(false)}>Templates</Link></li>
-          <li><Link to="/docs" onClick={() => setIsMenuOpen(false)}>Docs</Link></li>
+          <li><Link to="/user/projects" onClick={() => setIsMenuOpen(false)}>Projects</Link></li>
 
           {user ? (
             <>

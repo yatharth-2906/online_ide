@@ -72,6 +72,11 @@ async function handleLoginValidation(req, res) {
 
         // Validate input
         if (!token) {
+            res.clearCookie('token', {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+            });
             return res.status(401).json({ "status": "fail", "message": "No token provided" });
         }
 

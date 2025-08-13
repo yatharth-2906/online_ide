@@ -34,6 +34,33 @@ const startContainer = async (imageType, projectId) => {
     const image = IMAGE_MAPPING[imageType];
     if (!image) throw new Error(`Unsupported image type: ${imageType}`);
 
+    const containerName = `project-${projectId}`;
+
+    try { // Check if container already exists and is running
+        const containers = await docker.listContainers({ all: true });
+        const existingContainer = containers.find(
+            container => container.Names.some(name => name.includes(containerName))
+        );
+
+        if (existingContainer) {
+            if (existingContainer.State === 'running') {
+                // Get the host port mapping
+                const port = existingContainer.Ports[0]?.PublicPort ||
+                    await getAvailablePort();
+                return {
+                    containerId: existingContainer.Id,
+                    port
+                };
+            } else {
+                // Remove the stopped container
+                const container = docker.getContainer(existingContainer.Id);
+                await container.remove();
+            }
+        }
+    } catch (error) {
+        console.error('Error checking existing containers:', error);
+    }
+
     try {
         await docker.getImage(image).inspect();
     } catch {
@@ -49,8 +76,7 @@ const startContainer = async (imageType, projectId) => {
     }
 
     const port = await getAvailablePort();
-    const containerName = `project-${projectId}`;
-    const templatePath = path.resolve(__dirname, `../TEMPLATES/${imageType}`);
+    const templatePath = path.resolve(__dirname, `../PROJECTS/${projectId}`);
 
     const container = await docker.createContainer({
         Image: image,

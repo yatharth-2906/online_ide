@@ -1,7 +1,10 @@
 const express = require('express');
-const { handleRunProject, handleCreateProject } = require('../CONTROLLERS/project');
+const { handleRunProject, handleCreateProject, handleListUserProjects } = require('../CONTROLLERS/project');
 
 const projectRouter = express.Router();
+
+projectRouter.route('/')
+.get(handleListUserProjects);
 
 projectRouter.route('/start')
 .post(handleRunProject);

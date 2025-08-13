@@ -9,10 +9,6 @@ export const AppProvider = ({ children }) => {
     useEffect(() => {
         const verifyLoginStatus = async () => {
             setLoading(true);
-            if (!user) {
-                setLoading(false);
-                return;
-            }
 
             try {
                 const response = await fetch(`${import.meta.env.VITE_LOCAL_BACKEND_URL}/auth/validate_token`, {

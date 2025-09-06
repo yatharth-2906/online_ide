@@ -6,7 +6,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ProjectPage from './pages/ProjectPage';
-import ProjectList from './pages/ProjectList';
+import ProjectList from './pages/ListProjectPage';
 
 function App() {
   const { loading } = useContext(AppContext);

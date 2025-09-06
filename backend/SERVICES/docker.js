@@ -2,6 +2,10 @@ const path = require('path');
 const Docker = require('dockerode');
 const docker = new Docker();
 
+const { exec } = require("child_process");
+const util = require("util");
+const execPromise = util.promisify(exec);
+
 const IMAGE_MAPPING = {
     node: 'node:20-alpine',
     python: 'python:3.11-alpine',
@@ -102,4 +106,50 @@ const startContainer = async (imageType, projectId) => {
     return { containerId: container.id, port };
 };
 
-module.exports = { startContainer };
+async function getContainerFileTree(containerId, cwd = "/my_app") {
+    try {
+        // This will list everything (dirs + files) under cwd
+        const { stdout } = await execPromise(
+            `docker exec ${containerId} find ${cwd} -print`
+        );
+
+        const paths = stdout.trim().split("\n");
+        const tree = buildTree(paths, cwd);
+        return tree;
+    } catch (err) {
+        console.error("Error fetching container file tree:", err);
+        throw err;
+    }
+}
+
+/**
+ * Convert flat list of paths into nested JSON tree
+ */
+function buildTree(paths, base) {
+    const root = { name: base, type: "folder", children: [] };
+
+    for (const fullPath of paths) {
+        const relative = fullPath.replace(base + "/", "");
+        if (!relative || relative === base) continue;
+
+        const parts = relative.split("/");
+        let current = root;
+
+        parts.forEach((part, idx) => {
+            let existing = current.children.find(c => c.name === part);
+            if (!existing) {
+                existing = {
+                    name: part,
+                    type: idx === parts.length - 1 && !fullPath.endsWith("/") ? "file" : "folder",
+                    children: []
+                };
+                current.children.push(existing);
+            }
+            current = existing;
+        });
+    }
+
+    return root;
+}
+
+module.exports = { startContainer, getContainerFileTree };

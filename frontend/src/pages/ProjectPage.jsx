@@ -1,21 +1,84 @@
-import { io } from "socket.io-client";
-import { useState, useEffect, useRef } from 'react';
-import { useParams } from "react-router-dom";
+import { AppContext } from '../AppContext';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState } from "react";
+import { io } from 'socket.io-client';
+
 import FileExplorer from '../components/FileExplorer';
 import CodeEditor from '../components/CodeEditor';
-import XTerminal from '../components/Terminal';
+import Terminal from "../components/Terminal";
 import styles from '../components/styles/ProjectPage.module.css';
 
-let socket;
-
 function ProjectPage() {
+  const { user } = useContext(AppContext);
   const { project_id } = useParams();
+  const navigate = useNavigate();
 
   const [containerData, setContainerData] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Redirect if user not logged in
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user]);
+
+  // Start project and fetch container_id
+  useEffect(() => {
+    if (!user) return; // Don't start if user is not logged in
+
+    const handleStartProject = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_LOCAL_BACKEND_URL}/project/start`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ project_id }),
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Failed to start project');
+        }
+
+        const data = await response.json();
+        setContainerData(data.data);
+      } catch (error) {
+        console.error("Start Project error:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    handleStartProject();
+  }, [project_id, user]);
+
+  // Initialize socket only when containerData is ready
+  useEffect(() => {
+    if (containerData?.container_id) {
+      console.log('Connecting socket with container_id:', containerData.container_id);
+
+      const newSocket = io(import.meta.env.VITE_LOCAL_BACKEND_URL, {
+        query: {
+          container_id: containerData.container_id
+        },
+        transports: ['websocket', 'polling'] // Add fallback transport
+      });
+
+      setSocket(newSocket);
+    }
+  }, [containerData]);
+
   const [activeFile, setActiveFile] = useState('index.js');
   const [code, setCode] = useState('// Start coding here...\nconsole.log("Hello World!");');
-
-  const initialized = useRef(false);
 
   const files = [
     { name: 'index.js', type: 'file' },
@@ -36,69 +99,35 @@ function ProjectPage() {
   ];
 
   const handleRunCode = () => {
-    // This would now be handled through the real terminal
-    console.log('Code execution would happen in the real terminal');
+
   };
 
-  useEffect(() => {
-    if (initialized.current) 
-      return;
-    
-    initialized.current = true;
-    socket = io(import.meta.env.VITE_LOCAL_BACKEND_URL, {
-      withCredentials: true
-    });
-
-    socket.on('connect', () => {
-      console.log(`Connected to WebSocket server: ${socket.id}`);
-      socket.emit('join_project', project_id);
-    });
-
-    socket.on('disconnect', () => {
-      console.log(`Disconnected from WebSocket`);
-    });
-
-    async function run_project() {
-      try {
-        const response = await fetch(`${import.meta.env.VITE_LOCAL_BACKEND_URL}/project/start`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ project_id }),
-          credentials: 'include'
-        });
-
-        const details = await response.json();;
-        setContainerData(details.data); 
-      } catch (error) {
-        console.error("Error fetching project files:", error);
-      }
-    }
-
-    run_project();
-  }, [project_id]);
-
-
+  if (loading) {
+    return <div className="loader_container"><div className="loader"></div></div>;
+  }
+  
   return (
-    <div className={styles.projectContainer}>
-      <FileExplorer
-        files={files}
-        activeFile={activeFile}
-        setActiveFile={setActiveFile}
-      />
-
-      <div className={styles.mainContent}>
-        <CodeEditor
+    socket && containerData && (
+      <div className={styles.projectContainer}>
+        <FileExplorer
+          files={files}
           activeFile={activeFile}
-          code={code}
-          setCode={setCode}
-          handleRunCode={handleRunCode}
+          setActiveFile={setActiveFile}
         />
-        <XTerminal socket={socket} containerData={containerData} />
+
+        <div className={styles.mainContent}>
+          <CodeEditor
+            activeFile={activeFile}
+            code={code}
+            setCode={setCode}
+            handleRunCode={handleRunCode}
+          />
+          <Terminal socket={socket} />
+        </div>
       </div>
-    </div>
+    )
   );
+
 }
 
 export default ProjectPage;

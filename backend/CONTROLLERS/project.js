@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const Project = require('../MODELS/Project');
-const { startContainer } = require('../SERVICES/docker');
+const { startContainer, getContainerFileTree } = require('../SERVICES/docker');
 const { verifyToken } = require('../SERVICES/auth');
 
 async function copyDir(src, dest) {
@@ -106,14 +106,18 @@ async function handleRunProject(req, res) {
         if (!user) throw { statusCode: 401, message: 'Invalid token' };
 
         const project = await Project.findOne({ where: { project_id, owner_id: user.id } });
+        if (!project) throw { statusCode: 401, message: 'Project Does not existsor Unauthorized access' };
+
         const { containerId, port } = await startContainer(project.project_image, project.project_id);
+        const fileTree = await getContainerFileTree(containerId);
 
         res.status(201).json({
             status: 'success',
             data: {
                 project_id: project.project_id,
                 container_id: containerId,
-                port
+                port,
+                file_tree: fileTree
             }
         });
     } catch (error) {

@@ -1,98 +1,60 @@
 import { useEffect, useRef } from 'react';
-import { Terminal } from '@xterm/xterm';
-import { FitAddon } from 'xterm-addon-fit';
-import { WebLinksAddon } from 'xterm-addon-web-links';
-import 'xterm/css/xterm.css';
-import styles from './styles/ProjectPage.module.css';
+import { Terminal as Xterminal } from '@xterm/xterm';
+import '@xterm/xterm/css/xterm.css';
+import { FitAddon } from '@xterm/addon-fit';
 
-function XTerminal({ socket, containerData }) {
-  const terminalRef = useRef(null);
-  const terminal = useRef(null);
-  const fitAddon = useRef(new FitAddon());
+function Terminal({ socket }) {
+    const terminalRef = useRef(null);
+    const terminalInstance = useRef(null);
+    const fitAddon = useRef(new FitAddon());
 
-  useEffect(() => {
-  const handleResize = () => {
-    fitAddon.current.fit();
-    const dimensions = fitAddon.current.proposeDimensions();
-    if (socket && dimensions) {
-      socket.emit('resize', {
-        cols: dimensions.cols,
-        rows: dimensions.rows
-      });
-    }
-  };
+    useEffect(() => {
+        if (terminalInstance.current) return;
 
-  // Initialize terminal
-  terminal.current = new Terminal({
-    cursorBlink: true,
-    fontSize: 14,
-    fontFamily: "'Fira Code', monospace",
-    theme: {
-      background: '#0a0a0a',
-      foreground: '#e5e7eb',
-      cursor: '#6366f1',
-      selection: 'rgba(99, 102, 241, 0.3)',
-    },
-    allowProposedApi: true
-  });
+        const term = new Xterminal({
+            cursorBlink: true,
+            fontSize: 16,
+            rows: 12,
+            fontFamily: "'Fira Code', monospace",
+            theme: {
+                background: '#0a0a0a',
+                foreground: '#e5e7eb',
+                cursor: '#6366f1',
+                selection: 'rgba(99, 102, 241, 0.3)',
+            },
+        });
 
-  // Load addons and open
-  terminal.current.loadAddon(fitAddon.current);
-  terminal.current.loadAddon(new WebLinksAddon());
-  terminal.current.open(terminalRef.current);
-  fitAddon.current.fit();
+        terminalInstance.current = term;
+        term.loadAddon(fitAddon.current);
+        term.open(terminalRef.current);
+        fitAddon.current.fit();
 
-  if (socket && containerData) {
-    const { container_id } = containerData;
+        term.onData(data => {
+            socket.emit('terminal:write', data);
+        });
 
-    // Data handler
-    const dataHandler = (data) => {
-      terminal.current.write(data);
-    };
+        socket.on('terminal:data', (data) => {
+            term.write(data);
+        });
 
-    // Error handler
-    const errorHandler = (error) => {
-      terminal.current.writeln(`\r\nError: ${error}`);
-    };
+        socket.on('terminal:error', (error) => {
+            term.write(`\r\nError: ${error}\r\n`);
+        });
 
-    socket.on('terminal_data', dataHandler);
-    socket.on('terminal_error', errorHandler);
+        const handleResize = () => {
+            fitAddon.current.fit();
+            socket.emit('terminal:resize', {
+                cols: term.cols,
+                rows: term.rows
+            });
+        };
 
-    // Input handler - REMOVED manual write
-    terminal.current.onData((data) => {
-      socket.emit('terminal_input', {
-        containerId: container_id,
-        input: data
-      });
-    });
+        window.addEventListener('resize', handleResize);
+        handleResize();
 
-    // Start terminal session
-    socket.emit('start_terminal', { containerId: container_id });
+    }, []);
 
-    // Initial resize
-    handleResize();
-  }
-
-  // Cleanup
-  return () => {
-    window.removeEventListener('resize', handleResize);
-    if (socket) {
-      socket.off('terminal_data');
-      socket.off('terminal_error');
-    }
-    terminal.current.dispose();
-  };
-}, [socket, containerData]);
-
-
-  return (
-    <div className={styles.terminalContainer}>
-      <div className={styles.terminalHeader}>
-        <h4>TERMINAL</h4>
-      </div>
-      <div ref={terminalRef} className={styles.xtermContainer} />
-    </div>
-  );
+    return <div id="terminal" ref={terminalRef} />;
 }
 
-export default XTerminal;
+export default Terminal;

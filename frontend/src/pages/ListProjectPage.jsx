@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
-import styles from '../components/styles/ProjectList.module.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useNavigate } from "react-router-dom";
 import { AppContext } from '../AppContext';
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from 'react';
+import styles from '../components/styles/ProjectList.module.css';
 
 const ProjectsList = () => {
     const navigate = useNavigate();

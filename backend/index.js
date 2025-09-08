@@ -4,6 +4,7 @@ const http = require('http');
 const cors = require('cors');
 const express = require('express');
 const Docker = require('dockerode');
+const chokidar = require('chokidar');
 const cookieParser = require('cookie-parser');
 const { Server: SocketServer } = require('socket.io');
 
@@ -46,6 +47,10 @@ const io = new SocketServer(server, { cors: '*' });
 // Store last input times for rate limiting
 const lastInputTimes = new Map();
 const containerCleanupTimers = new Map();
+
+chokidar.watch('./Projects').on('all', (event, path) => {
+  io.emit('file:refresh');
+});
 
 io.on('connection', async (socket) => {
   console.log('New client connected:', socket.id);
@@ -113,16 +118,12 @@ io.on('connection', async (socket) => {
 
     // Cleanup for efficient resource management
     socket.on('disconnect', () => {
-      stream.end();
-      lastInputTimes.delete(socket.id);
-    });
-
-    // Cleanup when socket disconnects
-    socket.on('disconnect', () => {
       console.log(`Client disconnected: ${socket.id}, scheduling cleanup for container ${container_id}`);
 
       lastInputTimes.delete(socket.id);
       stream.end();
+
+      if (containerCleanupTimers.has(container_id)) return; // prevent duplicate timers
 
       // Start a 2-minute timer
       const timer = setTimeout(async () => {

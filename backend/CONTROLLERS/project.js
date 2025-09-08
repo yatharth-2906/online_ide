@@ -145,8 +145,80 @@ async function handleListUserProjects(req, res) {
     }
 }
 
+async function handleGetProjectFileTree(req, res) {
+    try {
+        const { container_id } = req.body;
+        if (!container_id) throw { statusCode: 401, message: 'Missing Container ID' };
+
+        const fileTree = await getContainerFileTree(container_id);
+        return res.status(200).json({ status: 'success', data: fileTree });
+    } catch (error) {
+        console.error("Error fetching file tree:", error);
+        res.status(500).json({ "status": "fail", "message": "Internal server error" });
+    }
+}
+
+async function handleGetSpecificFile(req, res) {
+    try {
+        let { project_id, relative_path } = req.body;
+        if (!project_id) throw { statusCode: 401, message: 'Missing Project ID' };
+        if (!relative_path) throw { statusCode: 401, message: 'Missing Relative Path' };
+
+        if (relative_path.startsWith("/")) relative_path = relative_path.slice(1);
+
+        const baseDir = path.resolve(__dirname, "../PROJECTS");
+        const filePath = path.join(baseDir, String(project_id), relative_path);
+
+        const fileContent = await fs.readFile(filePath, "utf-8");
+        return res.status(200).json({ status: "success", data: fileContent});
+    } catch (error) {
+        console.error("Error fetching specific file:", error);
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ status: "fail", message: error.message });
+        }
+        res.status(500).json({ "status": "fail", "message": "Internal server error" });
+    }
+}
+
+async function handleUpdateSpecificFile(req, res) {
+  try {
+    let { project_id, relative_path, new_code } = req.body;
+
+    if (!project_id) throw { statusCode: 401, message: "Missing Project ID" };
+    if (!relative_path) throw { statusCode: 401, message: "Missing File Path" };
+    if (!new_code && new_code !== "") throw { statusCode: 401, message: "Missing New Code" };
+
+    if (relative_path.startsWith("/")) relative_path = relative_path.slice(1);
+
+    const baseDir = path.resolve(__dirname, "../PROJECTS");
+    const filePath = path.join(baseDir, String(project_id), relative_path);
+
+    // ✅ Check if file exists
+    try {
+      await fs.access(filePath);
+    } catch {
+      throw { statusCode: 404, message: "File not found" };
+    }
+
+    // ✅ Write new code to the file
+    await fs.writeFile(filePath, new_code, "utf-8");
+
+    return res.status(200).json({ status: "success", message: "File updated successfully" });
+  } catch (error) {
+    console.error("Error updating specific file:", error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({ status: "fail", message: error.message });
+    }
+    res.status(500).json({ status: "fail", message: "Internal server error" });
+  }
+}
+
+
 module.exports = {
     handleRunProject,
     handleCreateProject,
-    handleListUserProjects
+    handleGetSpecificFile,
+    handleListUserProjects,
+    handleUpdateSpecificFile,
+    handleGetProjectFileTree,
 };

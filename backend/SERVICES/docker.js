@@ -39,6 +39,8 @@ const startContainer = async (imageType, projectId) => {
     if (!image) throw new Error(`Unsupported image type: ${imageType}`);
 
     const containerName = `project-${projectId}`;
+    const MAX_MEMORY = 800 * 1024 * 1024; // 800 MB
+    const MAX_CPU = 0.5; // 50% of one core
 
     try { // Check if container already exists and is running
         const containers = await docker.listContainers({ all: true });
@@ -90,7 +92,9 @@ const startContainer = async (imageType, projectId) => {
                 '3000/tcp': [{ HostPort: `${port}` }] // Maps the container’s port 3000 to the chosen host port.
             },
             AutoRemove: true, // Auto-remove when container stops
-            Binds: [`${templatePath}:/my_app`]
+            Binds: [`${templatePath}:/my_app`],
+            Memory: MAX_MEMORY,         // Limit memory
+            NanoCpus: MAX_CPU * 1e9     // Limit CPU
         },
         Env: [
             `PROJECT_ID=${projectId}`,
@@ -122,11 +126,8 @@ async function getContainerFileTree(containerId, cwd = "/my_app") {
     }
 }
 
-/**
- * Convert flat list of paths into nested JSON tree
- */
 function buildTree(paths, base) {
-    const root = { name: base, type: "folder", children: [] };
+    const root = { name: base, type: "folder", children: [], relative_path: base };
 
     for (const fullPath of paths) {
         const relative = fullPath.replace(base + "/", "");
@@ -134,14 +135,22 @@ function buildTree(paths, base) {
 
         const parts = relative.split("/");
         let current = root;
+        let currentPath = "";
 
         parts.forEach((part, idx) => {
+            currentPath += "/" + part;
+
             let existing = current.children.find(c => c.name === part);
+
             if (!existing) {
+                const isLastPart = idx === parts.length - 1;
+                const hasFileExtension = part.includes('.');
+
                 existing = {
                     name: part,
-                    type: idx === parts.length - 1 && !fullPath.endsWith("/") ? "file" : "folder",
-                    children: []
+                    type: isLastPart && hasFileExtension ? "file" : "folder",
+                    children: [],
+                    relative_path: currentPath
                 };
                 current.children.push(existing);
             }
@@ -151,5 +160,6 @@ function buildTree(paths, base) {
 
     return root;
 }
+
 
 module.exports = { startContainer, getContainerFileTree };

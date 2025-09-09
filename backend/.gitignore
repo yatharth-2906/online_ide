@@ -1,5 +1,4 @@
+PROJECTS/
 node_modules/
 .env
-
-deleteAllDBS.js
-*.txt
+nodemon.json

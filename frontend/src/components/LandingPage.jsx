@@ -8,12 +8,12 @@ function LandingPage() {
     const navigate = useNavigate();
 
     const handleCreateProject = async () => {
-        if(!user)
+        if (!user)
             return navigate("/login");
 
         console.info("Creating new project...");
     }
-    
+
     return (
         <div className={styles.landing}>
             <div className={styles.hero}>
@@ -62,7 +62,7 @@ export default App;`}
                 </div>
             </div>
 
-            <div className={styles.featuresSection}>
+            <div id="ideFeatures" className={styles.featuresSection}>
                 <h2 className={styles.sectionTitle}>Why Choose Cloud IDE?</h2>
                 <div className={styles.featuresGrid}>
                     <div className={styles.featureCard}>
@@ -83,7 +83,7 @@ export default App;`}
                     <div className={styles.featureCard}>
                         <div className={styles.featureIcon}>📦</div>
                         <h3>Templates Gallery</h3>
-                        <p>Pre-configured starters for React, Vue, Django, Flask, and more.</p>
+                        <p>Pre-configured starters for React, Vue, Flask, Flask, and more.</p>
                     </div>
                     <div className={styles.featureCard}>
                         <div className={styles.featureIcon}>🤝</div>
@@ -98,31 +98,37 @@ export default App;`}
                 </div>
             </div>
 
-            <div className={styles.templatesSection}>
+            <div id="ideTemplates" className={styles.templatesSection}>
                 <h2 className={styles.sectionTitle}>Popular Templates</h2>
                 <div className={styles.templatesGrid}>
+
                     <div className={styles.templateCard}>
                         <div className={styles.templateLogo}>⚛️</div>
                         <h3>React.js</h3>
-                        <p>Create React App with Tailwind CSS</p>
+                        <p>Build Dynamic and Modern UI with React</p>
                     </div>
+
                     <div className={styles.templateCard}>
-                        <div className={styles.templateLogo}>🌿</div>
-                        <h3>Vue.js</h3>
-                        <p>Vue 3 with Vite and Pinia</p>
+                        <div className={styles.templateLogo}>🌐</div>
+                        <h3>Node.js</h3>
+                        <p>Build Fast backend using Node & Express</p>
                     </div>
+
+                    <div className={styles.templateCard}>
+                        <div className={styles.templateLogo}>🔬</div>
+                        <h3>Flask</h3>
+                        <p>Build Quick and Secure Flask Backend</p>
+                    </div>
+
                     <div className={styles.templateCard}>
                         <div className={styles.templateLogo}>🐍</div>
-                        <h3>Django</h3>
-                        <p>Django with PostgreSQL</p>
+                        <h3>Python</h3>
+                        <p>Quick Python Script Ready to Run</p>
                     </div>
-                    <div className={styles.templateCard}>
-                        <div className={styles.templateLogo}>🟨</div>
-                        <h3>Node.js</h3>
-                        <p>Express API Starter</p>
-                    </div>
+
                 </div>
             </div>
+
         </div>
     );
 }

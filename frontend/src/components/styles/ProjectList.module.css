@@ -165,3 +165,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+.noProjects {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 1.1rem;
+}
+
+.noProjects p {
+  background: #111111;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  border: 1px solid #1f1f1f;
+}

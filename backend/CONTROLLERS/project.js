@@ -27,7 +27,12 @@ async function handleCreateProject(req, res) {
         const token = req.cookies.token;
 
         if (!token) throw { statusCode: 401, message: 'Unauthorized' };
-        if (!project_name || !image) throw { statusCode: 400, message: 'Missing required fields' };
+        if (!project_name || !project_description || !image) throw { statusCode: 400, message: 'Missing required fields' };
+
+        const allowedImages = ["react", "node", "flask", "python"];
+        if (!allowedImages.includes(image)) {
+            throw { statusCode: 400, message: 'Invalid template selected' };
+        }
 
         const user = verifyToken(token);
         if (!user) throw { statusCode: 401, message: 'Invalid token' };
@@ -63,34 +68,14 @@ async function handleCreateProject(req, res) {
             };
         }
 
-        const { containerId, port } = await startContainer(image, project.project_id);
-
-        res.status(201).json({
-            status: 'success',
-            data: {
-                project_id: project.project_id,
-                container_id: containerId,
-                port
-            }
-        });
+        return res.status(201).json({ status: 'success', projedt_id: project.project_id, });
 
     } catch (error) {
         console.error('Project creation error:', error);
+        const statusCode = error.statusCode || 500;
+        const message = error.message || 'Internal Server Error';
+        return res.status(statusCode).json({ status: 'fail', message });
 
-        // Enhanced error handling
-        let status = 500;
-        let message = 'Internal server error';
-
-        if (error.statusCode) status = error.statusCode;
-        if (error.message) message = error.message;
-
-        // Specific handling for Docker errors
-        if (error.reason === 'bad parameter') {
-            status = 400;
-            message = 'Container configuration error';
-        }
-
-        res.status(status).json({ status: 'fail', message });
     }
 }
 
@@ -111,7 +96,7 @@ async function handleRunProject(req, res) {
         const { containerId, port } = await startContainer(project.project_image, project.project_id);
         const fileTree = await getContainerFileTree(containerId);
 
-        res.status(201).json({
+        return res.status(201).json({
             status: 'success',
             data: {
                 project_id: project.project_id,
@@ -122,7 +107,9 @@ async function handleRunProject(req, res) {
         });
     } catch (error) {
         console.error("Error during running project:", error);
-        res.status(500).json({ "status": "fail", "message": "Internal server error" });
+        const statusCode = error.statusCode || 500;
+        const message = error.message || 'Internal Server Error';
+        return res.status(statusCode).json({ status: 'fail', message });
     }
 }
 
@@ -137,11 +124,11 @@ async function handleListUserProjects(req, res) {
 
         const projects = await Project.findAll({ where: { owner_id: user.id } });
 
-        res.status(200).json({ status: 'success', data: projects });
+        return res.status(200).json({ status: 'success', data: projects });
 
     } catch (error) {
         console.error("Error listing user projects:", error);
-        res.status(500).json({ "status": "fail", "message": "Internal server error" });
+        return res.status(500).json({ "status": "fail", "message": "Internal server error" });
     }
 }
 
@@ -154,7 +141,7 @@ async function handleGetProjectFileTree(req, res) {
         return res.status(200).json({ status: 'success', data: fileTree });
     } catch (error) {
         console.error("Error fetching file tree:", error);
-        res.status(500).json({ "status": "fail", "message": "Internal server error" });
+        return res.status(500).json({ "status": "fail", "message": "Internal server error" });
     }
 }
 
@@ -170,47 +157,47 @@ async function handleGetSpecificFile(req, res) {
         const filePath = path.join(baseDir, String(project_id), relative_path);
 
         const fileContent = await fs.readFile(filePath, "utf-8");
-        return res.status(200).json({ status: "success", data: fileContent});
+        return res.status(200).json({ status: "success", data: fileContent });
     } catch (error) {
         console.error("Error fetching specific file:", error);
         if (error.statusCode) {
             return res.status(error.statusCode).json({ status: "fail", message: error.message });
         }
-        res.status(500).json({ "status": "fail", "message": "Internal server error" });
+        return res.status(500).json({ "status": "fail", "message": "Internal server error" });
     }
 }
 
 async function handleUpdateSpecificFile(req, res) {
-  try {
-    let { project_id, relative_path, new_code } = req.body;
-
-    if (!project_id) throw { statusCode: 401, message: "Missing Project ID" };
-    if (!relative_path) throw { statusCode: 401, message: "Missing File Path" };
-    if (!new_code && new_code !== "") throw { statusCode: 401, message: "Missing New Code" };
-
-    if (relative_path.startsWith("/")) relative_path = relative_path.slice(1);
-
-    const baseDir = path.resolve(__dirname, "../PROJECTS");
-    const filePath = path.join(baseDir, String(project_id), relative_path);
-
-    // ✅ Check if file exists
     try {
-      await fs.access(filePath);
-    } catch {
-      throw { statusCode: 404, message: "File not found" };
-    }
+        let { project_id, relative_path, new_code } = req.body;
 
-    // ✅ Write new code to the file
-    await fs.writeFile(filePath, new_code, "utf-8");
+        if (!project_id) throw { statusCode: 401, message: "Missing Project ID" };
+        if (!relative_path) throw { statusCode: 401, message: "Missing File Path" };
+        if (!new_code && new_code !== "") throw { statusCode: 401, message: "Missing New Code" };
 
-    return res.status(200).json({ status: "success", message: "File updated successfully" });
-  } catch (error) {
-    console.error("Error updating specific file:", error);
-    if (error.statusCode) {
-      return res.status(error.statusCode).json({ status: "fail", message: error.message });
+        if (relative_path.startsWith("/")) relative_path = relative_path.slice(1);
+
+        const baseDir = path.resolve(__dirname, "../PROJECTS");
+        const filePath = path.join(baseDir, String(project_id), relative_path);
+
+        // ✅ Check if file exists
+        try {
+            await fs.access(filePath);
+        } catch {
+            throw { statusCode: 404, message: "File not found" };
+        }
+
+        // ✅ Write new code to the file
+        await fs.writeFile(filePath, new_code, "utf-8");
+
+        return res.status(200).json({ status: "success", message: "File updated successfully" });
+    } catch (error) {
+        console.error("Error updating specific file:", error);
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ status: "fail", message: error.message });
+        }
+        return res.status(500).json({ status: "fail", message: "Internal server error" });
     }
-    res.status(500).json({ status: "fail", message: "Internal server error" });
-  }
 }
 
 

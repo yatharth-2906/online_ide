@@ -4,35 +4,6 @@ import styles from './styles/ProjectPage.module.css';
 function FileExplorer({ fileTree, activeFile, setActiveFile, handleSelectFile }) {
   const [expandedFolders, setExpandedFolders] = useState({});
 
-  // Auto-expand all folders when fileTree loads
-  useEffect(() => {
-    if (fileTree) {
-      const expandAllFolders = (node, path = '') => {
-        const currentPath = path ? `${path}/${node.name}` : node.name;
-
-        if (node.type === 'folder' && node.children && node.children.length > 0) {
-          setExpandedFolders(prev => ({ ...prev, [currentPath]: true }));
-
-          // Recursively expand all child folders
-          node.children.forEach(child => {
-            if (child.type === 'folder') {
-              expandAllFolders(child, currentPath);
-            }
-          });
-        }
-      };
-
-      // Start from the children of my_app folder (skip the root)
-      if (fileTree.children) {
-        fileTree.children.forEach(child => {
-          if (child.type === 'folder') {
-            expandAllFolders(child, fileTree.name);
-          }
-        });
-      }
-    }
-  }, [fileTree]);
-
   const toggleFolder = (folderPath) => {
     setExpandedFolders(prev => ({
       ...prev,

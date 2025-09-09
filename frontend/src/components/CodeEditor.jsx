@@ -5,7 +5,6 @@ import styles from './styles/ProjectPage.module.css';
 // Import all the languages you want supported
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-python";
-import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/mode-html";

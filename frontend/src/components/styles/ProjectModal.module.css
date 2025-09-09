@@ -1,0 +1,251 @@
+/* ProjectModal.module.css */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    backdrop-filter: blur(4px);
+}
+
+.modal {
+    background: #111111;
+    border-radius: 12px;
+    margin-top: 80px;
+    padding: 2rem;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease-in-out;
+    border: 1px solid #1f1f1f;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #1f1f1f;
+}
+
+.modalTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(90deg, #ffffff, #a5b4fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.closeButton {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 0.25rem;
+    border-radius: 4px;
+}
+
+.closeButton:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.formLabel {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #e5e7eb;
+    display: block;
+}
+
+.formInput, 
+.formTextarea {
+    padding: 0.85rem;
+    background: #0a0a0a;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #ffffff;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.formInput::placeholder,
+.formTextarea::placeholder {
+    color: #6b7280;
+}
+
+.formInput:focus, 
+.formTextarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.formTextarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.techOptions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.techOption {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem;
+    background: #0a0a0a;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.techOption:hover {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.techOption.selected {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 1px #6366f1;
+}
+
+.techOption i {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
+}
+
+.techOption i.fa-node-js {
+    color: #68a063;
+}
+
+.techOption i.fa-python {
+    color: #3776ab;
+}
+
+.techOption i.fa-java {
+    color: #007396;
+}
+
+.techOption i.fa-react {
+    color: #61dafb;
+}
+
+.techOption i.fa-vuejs {
+    color: #4fc08d;
+}
+
+.techOption i.fa-angular {
+    color: #dd0031;
+}
+
+.techOption i.fa-code {
+    color: #00add8;
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #1f1f1f;
+}
+
+.cancelButton {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: transparent;
+    color: #a5b4fc;
+    border: 1px solid #4f46e5;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancelButton:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.createButton {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.createButton:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 640px) {
+    .modal {
+        padding: 1.5rem;
+    }
+    
+    .techOptions {
+        grid-template-columns: 1fr;
+    }
+    
+    .formActions {
+        flex-direction: column;
+    }
+    
+    .cancelButton, 
+    .createButton {
+        width: 100%;
+    }
+}

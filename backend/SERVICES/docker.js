@@ -7,11 +7,10 @@ const util = require("util");
 const execPromise = util.promisify(exec);
 
 const IMAGE_MAPPING = {
+    react: 'node:20-alpine',
     node: 'node:20-alpine',
+    flask: 'python:3.11-alpine',
     python: 'python:3.11-alpine',
-    java: 'eclipse-temurin:17-jre-alpine',
-    go: 'golang:alpine',
-    ruby: 'ruby:alpine'
 };
 
 const getAvailablePort = async () => {
@@ -39,8 +38,8 @@ const startContainer = async (imageType, projectId) => {
     if (!image) throw new Error(`Unsupported image type: ${imageType}`);
 
     const containerName = `project-${projectId}`;
-    const MAX_MEMORY = 800 * 1024 * 1024; // 800 MB
-    const MAX_CPU = 0.5; // 50% of one core
+    const MAX_MEMORY = 600 * 1024 * 1024; // 600 MB
+    const MAX_CPU = 1;
 
     try { // Check if container already exists and is running
         const containers = await docker.listContainers({ all: true });

@@ -1,8 +1,8 @@
 {
-  "name": "react-minimal",
+  "name": "react-app",
   "private": true,
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 3000",
+    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },

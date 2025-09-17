@@ -41,7 +41,7 @@ function FileExplorer({ fileTree, activeFile, setActiveFile, handleSelectFile })
               className={`${styles.file} ${activeFile === currentPath ? styles.activeFile : ''}`}
               onClick={() => {
                 const pathToFetch = node.relative_path || currentPath;
-                setActiveFile(pathToFetch);
+                setActiveFile("." + pathToFetch);
                 handleSelectFile(pathToFetch);
               }}
               key={currentPath} // key for file divs is fine

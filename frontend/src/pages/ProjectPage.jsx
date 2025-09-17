@@ -18,7 +18,7 @@ function ProjectPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [fileTree, setFileTree] = useState(null);
-  const [activeFile, setActiveFile] = useState('/');
+  const [activeFile, setActiveFile] = useState('./');
   const [code, setCode] = useState("\n // Select a file to view its content");
 
   // Redirect if user not logged in
@@ -26,7 +26,7 @@ function ProjectPage() {
     if (!user) {
       navigate('/login');
     }
-  }, [user]);
+  }, [user, navigate]);
 
   async function handleSelectFile(relative_path) {
     try {
@@ -38,6 +38,7 @@ function ProjectPage() {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Failed to fetch the file data');
       }
 
@@ -58,6 +59,7 @@ function ProjectPage() {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Failed to fetch the file data');
       }
 
@@ -75,8 +77,6 @@ function ProjectPage() {
 
   // Start project and fetch container_id
   useEffect(() => {
-    if (!user) return; // Don't start if user is not logged in
-
     const handleStartProject = async () => {
       setLoading(true);
       setError(null);
@@ -92,6 +92,10 @@ function ProjectPage() {
         );
 
         if (!response.ok) {
+          if (response.status === 409){
+            window.location.reload();
+          }
+
           const errorData = await response.json().catch(() => ({}));
           throw new Error(errorData.message || 'Failed to start project');
         }
@@ -107,6 +111,7 @@ function ProjectPage() {
         console.error("Start Project error:", error);
         setError(error.message);
       } finally {
+        await new Promise(resolve => setTimeout(resolve, 2000));
         setLoading(false);
       }
     };
@@ -161,6 +166,10 @@ function ProjectPage() {
       if (!fileTree) {
         getFileTree();
       }
+
+      return () => {
+        newSocket.disconnect();
+      };
     }
   }, [containerData]);
 
@@ -173,7 +182,7 @@ function ProjectPage() {
     }
   }, [socket, containerData, activeFile]);
 
-  if (loading) {
+  if (!user || loading) {
     return <div className="loader_container"><div className="loader"></div></div>;
   }
 

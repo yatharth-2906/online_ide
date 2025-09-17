@@ -48,8 +48,34 @@ const io = new SocketServer(server, { cors: '*' });
 const lastInputTimes = new Map();
 const containerCleanupTimers = new Map();
 
-chokidar.watch('./Projects').on('all', (event, path) => {
-  io.emit('file:refresh');
+const DEBOUNCE_DELAY = 300;
+const IGNORED_PATTERNS = [
+  /node_modules/
+];
+
+let refreshTimer = null;
+let lastEmittedTime = 0;
+
+chokidar.watch('./Projects', {
+  ignored: IGNORED_PATTERNS,
+  ignoreInitial: true
+}).on('all', (event, path) => {
+  // Skip if this path should be ignored
+  if (IGNORED_PATTERNS.some(pattern => pattern.test(path))) {
+    return;
+  }
+  
+  // Clear any existing timer
+  if (refreshTimer) {
+    clearTimeout(refreshTimer);
+  }
+  
+  // Set new debounced emit
+  refreshTimer = setTimeout(() => {
+    io.emit('file:refresh');
+    lastEmittedTime = Date.now();
+    refreshTimer = null;
+  }, DEBOUNCE_DELAY);
 });
 
 io.on('connection', async (socket) => {

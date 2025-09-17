@@ -2,3 +2,4 @@ PROJECTS/
 node_modules/
 .env
 nodemon.json
+package-lock.json
